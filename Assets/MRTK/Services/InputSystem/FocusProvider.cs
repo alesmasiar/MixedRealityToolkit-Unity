@@ -1375,7 +1375,8 @@ namespace Microsoft.MixedReality.Toolkit.Input
                                     // This breaks cases like when 2 overlapping objects are selectable. We need to 
                                     // address these cases with a smarter approach in the future.
                                     //        See github issue https://github.com/microsoft/MixedRealityToolkit-Unity/issues/7629
-                                    Vector3 closestPointToCollider = collider.ClosestPoint(testPoint);
+                                    // if collider is concave, return testPoint to stop generating physics warnings
+                                    Vector3 closestPointToCollider = collider is MeshCollider { convex: false } ? testPoint : collider.ClosestPoint(testPoint);
 
                                     // Keep track of the object closest to the test point.
                                     float distance = (testPoint - closestPointToCollider).sqrMagnitude;

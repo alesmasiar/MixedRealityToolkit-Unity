@@ -167,8 +167,8 @@ namespace Microsoft.MixedReality.Toolkit.Input
 
         /// <summary>
         /// Whether to ignore colliders that may be near the pointer, but not actually in the visual FOV.
-        /// This can prevent accidental grabs, and will allow hand rays to turn on when you may be near
-        /// a grabbable but cannot see it. Visual FOV is defined by cone centered about display center,
+        /// This can prevent accidental grabs, and will allow hand rays to turn on when you may be near 
+        /// a grabbable but cannot see it. Visual FOV is defined by cone centered about display center, 
         /// radius equal to half display height.
         /// </summary>
         public bool IgnoreCollidersNotInFOV
@@ -177,8 +177,8 @@ namespace Microsoft.MixedReality.Toolkit.Input
             set => ignoreCollidersNotInFOV = value;
         }
 
-        private SpherePointerQueryInfo queryBufferNearObjectRadius;
-        private SpherePointerQueryInfo queryBufferInteractionRadius;
+        public SpherePointerQueryInfo queryBufferNearObjectRadius { get; private set; }
+        public SpherePointerQueryInfo queryBufferInteractionRadius { get; private set; }
 
         /// <summary>
         /// Test if the pointer is near any collider that's both on a grabbable layer mask, and has a NearInteractionGrabbable.
@@ -324,7 +324,7 @@ namespace Microsoft.MixedReality.Toolkit.Input
 
         /// <summary>
         /// Because pointers shouldn't be able to interact with objects that are "behind" it, it is necessary to determine the forward axis of the pointer when making interaction checks.
-        ///
+        /// 
         /// For example, a grab pointer's axis should is the result of Vector3.Lerp(palm forward axis, palm to index finger axis).
         ///
         /// This method provides a mechanism to get this normalized forward axis.
@@ -401,10 +401,10 @@ namespace Microsoft.MixedReality.Toolkit.Input
         /// <summary>
         /// Helper class for storing and managing near grabbables close to a point
         /// </summary>
-        private class SpherePointerQueryInfo
+        public class SpherePointerQueryInfo
         {
             /// <summary>
-            /// How many colliders are near the point from the latest call to TryUpdateQueryBufferForLayerMask.
+            /// How many colliders are near the point from the latest call to TryUpdateQueryBufferForLayerMask. 
             /// </summary>
             private int numColliders;
 
@@ -439,7 +439,7 @@ namespace Microsoft.MixedReality.Toolkit.Input
             public bool ignoreBoundsHandlesForQuery = false;
 
             /// <summary>
-            /// The grabbable near the QueryRadius.
+            /// The grabbable near the QueryRadius. 
             /// </summary>
             public NearInteractionGrabbable grabbable;
 
@@ -586,12 +586,13 @@ namespace Microsoft.MixedReality.Toolkit.Input
                     return false;
                 }
 
-                MeshCollider meshCollider = collider as MeshCollider;
-                if (meshCollider != null && meshCollider.convex == false)
-                {
-                    // Physics.ClosestPoint is only allowed on a convex collider.
-                    return false;
-                }
+                // disable convex check to enable grabbing of concave objects
+                //MeshCollider meshCollider = collider as MeshCollider;
+                //if (meshCollider != null && meshCollider.convex == false)
+                //{
+                //    // Physics.ClosestPoint is only allowed on a convex collider.
+                //    return false;
+                //}
 
                 Camera mainCam = CameraCache.Main;
                 // Additional check: is grabbable in the camera frustum
@@ -607,7 +608,8 @@ namespace Microsoft.MixedReality.Toolkit.Input
 
             public bool IsColliderPositionValid(Collider collider, Vector3 pointerPosition, Vector3 pointerAxis, float queryAngle, float queryDistance, out Vector3 closestPointToCollider)
             {
-                closestPointToCollider = collider.ClosestPoint(pointerPosition);
+                // when grabbing concave objects, just return the grab position - for now it's a good enough solution
+                closestPointToCollider = collider is MeshCollider { convex: false } ? pointerPosition : collider.ClosestPoint(pointerPosition);
                 Vector3 relativeColliderPosition = closestPointToCollider - pointerPosition;
 
                 // Check if the collider is within the activation cone
