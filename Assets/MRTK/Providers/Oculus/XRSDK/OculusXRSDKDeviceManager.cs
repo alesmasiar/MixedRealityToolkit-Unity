@@ -220,7 +220,7 @@ The tool can be found under <i>Mixed Reality > Toolkit > Utilities > Oculus > In
 
             base.Update();
 
-            if (OVRPlugin.GetHandTrackingEnabled())
+            if (OVRPlugin.GetHandTrackingEnabled() && DesiredInputCharacteristics.Contains(InputDeviceCharacteristics.HandTracking))
             {
                 UpdateHands();
             }
