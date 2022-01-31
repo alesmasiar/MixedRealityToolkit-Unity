@@ -15,19 +15,19 @@ namespace Microsoft.MixedReality.Toolkit.Input
     public class LinePointer : BaseControllerPointer
     {
         [SerializeField]
-        protected Gradient LineColorSelected = new Gradient();
+        public Gradient LineColorSelected = new Gradient();
 
         [SerializeField]
-        protected Gradient LineColorValid = new Gradient();
+        public Gradient LineColorValid = new Gradient();
 
         [SerializeField]
-        protected Gradient LineColorInvalid = new Gradient();
+        public Gradient LineColorInvalid = new Gradient();
 
         [SerializeField]
-        protected Gradient LineColorNoTarget = new Gradient();
+        public Gradient LineColorNoTarget = new Gradient();
 
         [SerializeField]
-        protected Gradient LineColorLockFocus = new Gradient();
+        public Gradient LineColorLockFocus = new Gradient();
 
         [SerializeField]
         private BaseMixedRealityLineDataProvider lineBase;
