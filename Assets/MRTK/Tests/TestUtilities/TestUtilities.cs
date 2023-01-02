@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using Microsoft.MixedReality.Toolkit.Utilities;
 using UnityEngine;
 
 #if UNITY_EDITOR
-using Microsoft.MixedReality.Toolkit.Utilities.Editor;
 using Microsoft.MixedReality.Toolkit.Editor;
+using Microsoft.MixedReality.Toolkit.Utilities.Editor;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -273,7 +274,7 @@ namespace Microsoft.MixedReality.Toolkit.Tests
 
         public static void InitializeCamera()
         {
-            Camera[] cameras = GameObject.FindObjectsOfType<Camera>();
+            Camera[] cameras = Object.FindObjectsOfType<Camera>();
 
             if (cameras.Length == 0)
             {
@@ -284,6 +285,13 @@ namespace Microsoft.MixedReality.Toolkit.Tests
         public static void InitializeMixedRealityToolkit(MixedRealityToolkitConfigurationProfile configuration)
         {
             InitializeCamera();
+
+            // Ensure the AsyncCoroutineRunner is added to avoid log spam in the tests
+            if (Object.FindObjectOfType<AsyncCoroutineRunner>() == null)
+            {
+                new GameObject("AsyncCoroutineRunner").AddComponent<AsyncCoroutineRunner>();
+            }
+
 #if UNITY_EDITOR
             MixedRealityInspectorUtility.AddMixedRealityToolkitToScene(configuration, true);
 #endif
@@ -336,25 +344,25 @@ namespace Microsoft.MixedReality.Toolkit.Tests
         public static void AssertAboutEqual(Vector3 actual, Vector3 expected, string message, float tolerance = 0.01f)
         {
             var dist = (actual - expected).magnitude;
-            Debug.Assert(dist < tolerance, $"{message}, expected {expected:0.000}, was {actual:0.000}");
+            Debug.Assert(dist < tolerance, $"{message}, expected {expected.ToString("F4")}, was {actual.ToString("F4")}");
         }
 
         public static void AssertAboutEqual(Quaternion actual, Quaternion expected, string message, float tolerance = 0.01f)
         {
             var angle = Quaternion.Angle(actual, expected);
-            Debug.Assert(angle < tolerance, $"{message}, expected {expected:0.000}, was {actual:0.000}");
+            Debug.Assert(angle < tolerance, $"{message}, expected {expected.ToString("F4")}, was {actual.ToString("F4")}");
         }
 
         public static void AssertNotAboutEqual(Vector3 val1, Vector3 val2, string message, float tolerance = 0.01f)
         {
             var dist = (val1 - val2).magnitude;
-            Debug.Assert(dist >= tolerance, $"{message}, val1 {val1:0.000} almost equals val2 {val2:0.000}");
+            Debug.Assert(dist >= tolerance, $"{message}, val1 {val1.ToString("F4")} almost equals val2 {val2.ToString("F4")}");
         }
 
         public static void AssertNotAboutEqual(Quaternion val1, Quaternion val2, string message, float tolerance = 0.01f)
         {
             var angle = Quaternion.Angle(val1, val2);
-            Debug.Assert(angle >= tolerance, $"{message}, val1 {val1:0.000} almost equals val2 {val2:0.000}");
+            Debug.Assert(angle >= tolerance, $"{message}, val1 {val1.ToString("F4")} almost equals val2 {val2.ToString("F4")}");
         }
 
         /// <summary>
@@ -408,16 +416,8 @@ namespace Microsoft.MixedReality.Toolkit.Tests
         [MenuItem("Mixed Reality/Toolkit/Utilities/Update/Icons/Tests")]
         private static void UpdateTestScriptIcons()
         {
-            Texture2D icon = null;
-
-            foreach (string iconPath in MixedRealityToolkitFiles.GetFiles(MixedRealityToolkitModuleType.StandardAssets, "Icons"))
-            {
-                if (iconPath.EndsWith("test_icon.png"))
-                {
-                    icon = AssetDatabase.LoadAssetAtPath<Texture2D>(iconPath);
-                    break;
-                }
-            }
+            // test_icon.png
+            Texture2D icon = AssetDatabase.LoadAssetAtPath<Texture2D>(AssetDatabase.GUIDToAssetPath("731058d908be67544b92b0341f29d906"));
 
             if (icon == null)
             {

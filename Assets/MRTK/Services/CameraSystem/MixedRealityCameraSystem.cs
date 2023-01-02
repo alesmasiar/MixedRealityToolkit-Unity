@@ -45,7 +45,7 @@ namespace Microsoft.MixedReality.Toolkit.CameraSystem
         {
             get
             {
-                currentDisplayType = DisplayType.Opaque;
+                DisplayType currentDisplayType = DisplayType.Opaque;
 
                 IReadOnlyList<IMixedRealityCameraSettingsProvider> dataProviders = GetDataProviders<IMixedRealityCameraSettingsProvider>();
                 if (dataProviders.Count > 0)
@@ -86,8 +86,7 @@ namespace Microsoft.MixedReality.Toolkit.CameraSystem
 
         /// <inheritdoc/>
         public MixedRealityCameraProfile CameraProfile => ConfigurationProfile as MixedRealityCameraProfile;
-        
-        private DisplayType currentDisplayType;
+
         private bool cameraOpaqueLastFrame = false;
 
         /// <summary>
@@ -102,13 +101,14 @@ namespace Microsoft.MixedReality.Toolkit.CameraSystem
         {
             base.Initialize();
 
-            MixedRealityCameraProfile profile = ConfigurationProfile as MixedRealityCameraProfile;
+            MixedRealityCameraProfile profile = CameraProfile;
             var cameraSettingProviders = GetDataProviders<IMixedRealityCameraSettingsProvider>();
 
             if ((cameraSettingProviders.Count == 0) && (profile != null))
             {
+                int settingsConfigurationsLength = profile.SettingsConfigurations.Length;
                 // Register the settings providers.
-                for (int i = 0; i < profile.SettingsConfigurations.Length; i++)
+                for (int i = 0; i < settingsConfigurationsLength; i++)
                 {
                     MixedRealityCameraSettingsConfiguration configuration = profile.SettingsConfigurations[i];
 
@@ -140,7 +140,7 @@ namespace Microsoft.MixedReality.Toolkit.CameraSystem
             {
                 cameraOpaqueLastFrame = IsOpaque;
 
-                if (IsOpaque)
+                if (cameraOpaqueLastFrame)
                 {
                     ApplySettingsForOpaqueDisplay();
                 }
@@ -212,11 +212,13 @@ namespace Microsoft.MixedReality.Toolkit.CameraSystem
             {
                 base.Update();
 
-                if (IsOpaque != cameraOpaqueLastFrame)
-                {
-                    cameraOpaqueLastFrame = IsOpaque;
+                bool cameraOpaqueThisFrame = IsOpaque;
 
-                    if (IsOpaque)
+                if (cameraOpaqueThisFrame != cameraOpaqueLastFrame)
+                {
+                    cameraOpaqueLastFrame = cameraOpaqueThisFrame;
+
+                    if (cameraOpaqueThisFrame)
                     {
                         ApplySettingsForOpaqueDisplay();
                     }

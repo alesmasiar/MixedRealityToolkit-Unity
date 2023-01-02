@@ -35,30 +35,50 @@ $unityEditor = Get-ChildItem $UnityDirectory -Filter 'Unity.exe' -Recurse | Sele
 if (-not $unityEditor) {
     throw "Unable to find the Unity editor executable in $UnityDirectory"
 }
-Write-Verbose $unityEditor;
+Write-Verbose $unityEditor
 
 function RunUnityTask {
     param([string]$taskName, [string]$methodToExecute)
     Write-Output "Starting running Unity task: $($taskName)"
     $logFile = New-Item -Path "Logs\Unity.$($taskName).$($Version).log" -ItemType File -Force
-    
+
     $ProjectLocation = Resolve-Path "$(Get-Location)\..\"
     Write-Output $ProjectLocation
     $proc = Start-Process -FilePath "$unityEditor" -ArgumentList "-projectPath $ProjectLocation -batchmode -executeMethod $($methodToExecute) -logFile $($logFile.FullName) -nographics -quit" -PassThru
     $ljob = Start-Job -ScriptBlock { param($log) Get-Content "$log" -Wait } -ArgumentList $logFile.FullName
-    
+
     while (-not $proc.HasExited -and $ljob.HasMoreData) {
         Receive-Job $ljob
         Start-Sleep -Milliseconds 200
     }
     Receive-Job $ljob
-    
+
     Stop-Job $ljob
-    
+
     Remove-Job $ljob
     Stop-Process $proc
     if ($proc.ExitCode -ge 1) {
         Write-Error "Failed to execute Unity Task '$($taskName)', see log '$($logFile)' for more information."
+
+        if (Test-Path $logFile.FullName) {
+            Write-Output '====================================================='
+            Write-Output '              Unity build docs finished              '
+            Write-Output '====================================================='
+
+            Write-Output '====================================================='
+            Write-Output '                Begin Unity build log                '
+            Write-Output '====================================================='
+
+            Get-Content $logFile.FullName
+
+            Write-Output '====================================================='
+            Write-Output '                 End Unity build log                 '
+            Write-Output '====================================================='
+        }
+        else {
+            Write-Error 'Unity build log missing!'
+        }
+
         exit($proc.ExitCode)
     }
 }
@@ -75,13 +95,16 @@ try {
 
     ### Build the needed flavor for MRTK
     Write-Output "============ Building InEditor WSA ============ "
-    dotnet msbuild ..\NuGet\BuildSource.proj -target:BuildWSAEditor > "Logs\Build.InEditor.WSA.$($Version).log"
+    $logFilePath = "$(Get-Location)\Logs\Build.InEditor.WSA.$($Version).log"
+    dotnet nuget add source https://api.nuget.org/v3/index.json -n nuget.org
+    dotnet msbuild ..\NuGet\BuildSource.proj -target:BuildWSAEditor > $logFilePath
     if ($lastexitcode -ge 1) {
-        Write-Error "Building InEditor WSA Failed! See log file for more information $(Get-Location)\Logs\Build.InEditor.WSA.$($Version).log";
-        Copy-Item -Path "Logs\Unity.MSBuildGeneration.$($Version).log" -Destination "$OutputDirectory\"
+        Write-Output "Copying $logFilePath to $OutputDirectory"
+        Copy-Item -Path $logFilePath -Destination "$OutputDirectory"
+        Write-Error "Building InEditor WSA Failed! See log file for more information $logFilePath"
         exit($lastexitcode)
     }
-    
+
     Write-Output "============ Copying the binaries ============ "
     New-Item -ItemType Directory "MRTK_$($Version)"
     New-Item -ItemType Directory "MRTK_$($Version)\dependencies"
@@ -98,7 +121,6 @@ try {
     nuget install Microsoft.Windows.MixedReality.DotNetWinRT -OutputDirectory packages
     Copy-Item "packages\Microsoft.Windows.MixedReality.DotNetWinRT*\lib\unity\net46\Microsoft.Windows.MixedReality.DotNetWinRT.dll" "MRTK_$($Version)\dependencies\"
     Copy-Item -Path "MRTK_$($Version)" -Destination "$OutputDirectory" -Recurse
-    
 }
 finally {
     Set-Location $OriginalPath

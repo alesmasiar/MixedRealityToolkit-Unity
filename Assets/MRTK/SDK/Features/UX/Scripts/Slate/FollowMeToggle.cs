@@ -184,6 +184,11 @@ namespace Microsoft.MixedReality.Toolkit.UI
             AutoFollowAtDistance = autoFollowAtDistance;
         }
 
+        private void OnDisable()
+        {
+            autoFollowDistanceCheck = null;
+        }
+
         #endregion MonoBehaviour Implementation
 
         /// <summary>

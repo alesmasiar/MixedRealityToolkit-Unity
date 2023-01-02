@@ -1,7 +1,9 @@
-﻿
-using UnityEngine;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 using Microsoft.MixedReality.Toolkit.UI;
-using Microsoft.MixedReality.Toolkit.Experimental.UI;
+using UnityEngine;
+using MRTKObjectManipulator = Microsoft.MixedReality.Toolkit.UI.ObjectManipulator;
 
 namespace Microsoft.MixedReality.Toolkit.Examples.Demos
 {
@@ -40,7 +42,7 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos
 
                 manipulatedObject.GetComponent<ConstraintManager>();
                 var manipulationHandler = manipulatedObject.GetComponent<ManipulationHandler>();
-                var objectManipulator = manipulatedObject.GetComponent<ObjectManipulator>();
+                var objectManipulator = manipulatedObject.GetComponent<MRTKObjectManipulator>();
                 if (manipulationHandler != null || objectManipulator != null)
                 {
                     if (manipulationHandler != null)

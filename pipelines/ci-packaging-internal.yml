@@ -6,22 +6,23 @@ variables:
 jobs:
 - job: CodeValidation
   pool:
-    vmImage: windows-2019
+    vmImage: windows-latest
   steps:
   - template: templates/validation.yml
 
 - job: UnityValidation
   timeoutInMinutes: 90
   pool:
-    name: Analog On-Prem
+    name: Analog-Unity
     demands:
-    - ${{ variables.Unity2018VersionInternal }}
-    - COG-UnityCache-WUS2-01
-    - SDK_18362 -equals TRUE
+      - ImageVersionOverride -equals 20220218.0.1
   workspace:
     clean: resources
   steps:
   - template: templates/ci-common.yml
     parameters:
       publishPackagesToFeed: true
-      UnityVersion: $(Unity2018VersionInternal)
+      UnityVersion: $(Unity2019VersionInternal)
+
+  - pwsh: Write-Host "##vso[build.updatebuildnumber]$(MRTKVersion)-preview.$(Build.BuildNumber)"
+    displayName: Set build number
