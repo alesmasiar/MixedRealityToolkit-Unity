@@ -62,6 +62,9 @@ namespace Microsoft.MixedReality.Toolkit.Utilities
                     supportedPlatforms |= SupportedPlatforms.Lumin;
                     break;
 #endif
+                case RuntimePlatform.PS5:
+                    supportedPlatforms |= SupportedPlatforms.PS5;
+                    break;
             }
 
             return supportedPlatforms;
@@ -134,6 +137,9 @@ namespace Microsoft.MixedReality.Toolkit.Utilities
                     supportedPlatforms |= SupportedPlatforms.Lumin;
                     break;
 #endif
+                case UnityEditor.BuildTarget.PS5:
+                    supportedPlatforms |= SupportedPlatforms.PS5;
+                    break;
             }
 
             return supportedPlatforms;
