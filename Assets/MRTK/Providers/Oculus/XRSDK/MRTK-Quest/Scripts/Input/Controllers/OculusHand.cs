@@ -252,11 +252,11 @@ namespace Microsoft.MixedReality.Toolkit.XRSDK.Oculus.Input
 
             if (ControllerHandedness == Handedness.Left)
             {
-                settingsProfile.CurrentLeftHandTrackingConfidence = ovrHand.HandConfidence;
+                //settingsProfile.CurrentLeftHandTrackingConfidence = ovrHand.HandConfidence;
             }
             else
             {
-                settingsProfile.CurrentRightHandTrackingConfidence = ovrHand.HandConfidence;
+                //settingsProfile.CurrentRightHandTrackingConfidence = ovrHand.HandConfidence;
             }
 
             if (ovrSkeleton != null)

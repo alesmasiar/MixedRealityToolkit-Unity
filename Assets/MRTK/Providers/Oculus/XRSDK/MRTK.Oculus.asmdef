@@ -30,6 +30,11 @@
             "name": "com.unity.xr.oculus",
             "expression": "",
             "define": "OCULUS_ENABLED"
+        },
+        {
+            "name": "com.meta.xr.sdk.core",
+            "expression": "",
+            "define": "OCULUSINTEGRATION_PRESENT"
         }
     ],
     "noEngineReferences": false

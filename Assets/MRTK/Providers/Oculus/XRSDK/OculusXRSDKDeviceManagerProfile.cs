@@ -107,53 +107,53 @@ namespace Microsoft.MixedReality.Toolkit.XRSDK.Oculus.Input
             set => minimumHandConfidence = value;
         }
 
-        /// <summary>
-        /// Current tracking confidence of left hand. Value managed by OculusQuestHand.cs.
-        /// </summary>
-        public OVRHand.TrackingConfidence CurrentLeftHandTrackingConfidence { get; set; }
+        ///// <summary>
+        ///// Current tracking confidence of left hand. Value managed by OculusQuestHand.cs.
+        ///// </summary>
+        //public OVRHand.TrackingConfidence CurrentLeftHandTrackingConfidence { get; set; }
 
-        /// <summary>
-        /// Current tracking confidence of right hand. Value managed by OculusQuestHand.cs.
-        /// </summary>
-        public OVRHand.TrackingConfidence CurrentRightHandTrackingConfidence { get; set; }
+        ///// <summary>
+        ///// Current tracking confidence of right hand. Value managed by OculusQuestHand.cs.
+        ///// </summary>
+        //public OVRHand.TrackingConfidence CurrentRightHandTrackingConfidence { get; set; }
 
-        [Header("Performance Configuration")]
-        [SerializeField]
-        [Tooltip("Default CPU performance level (0-2 is documented), (3-5 is undocumented).")]
-        [Range(0, 5)]
-        private OVRManager.ProcessorPerformanceLevel defaultCpuLevel = OVRManager.ProcessorPerformanceLevel.SustainedHigh;
+        //[Header("Performance Configuration")]
+        //[SerializeField]
+        //[Tooltip("Default CPU performance level (0-2 is documented), (3-5 is undocumented).")]
+        //[Range(0, 5)]
+        //private OVRManager.ProcessorPerformanceLevel defaultCpuLevel = OVRManager.ProcessorPerformanceLevel.SustainedHigh;
 
-        /// <summary>
-        /// Accessor for the Oculus CPU performance level.
-        /// https://developer.oculus.com/documentation/native/android/mobile-power-overview
-        /// </summary>
-        public OVRManager.ProcessorPerformanceLevel CPULevel
-        {
-            get => defaultCpuLevel;
-            set
-            {
-                defaultCpuLevel = value;
-                ApplyConfiguredPerformanceSettings();
-            }
-        }
+        ///// <summary>
+        ///// Accessor for the Oculus CPU performance level.
+        ///// https://developer.oculus.com/documentation/native/android/mobile-power-overview
+        ///// </summary>
+        //public OVRManager.ProcessorPerformanceLevel CPULevel
+        //{
+        //    get => defaultCpuLevel;
+        //    set
+        //    {
+        //        defaultCpuLevel = value;
+        //        ApplyConfiguredPerformanceSettings();
+        //    }
+        //}
 
-        [SerializeField]
-        [Tooltip("Default GPU performance level (0-2 is documented), (3-5 is undocumented).")]
-        [Range(0, 5)]
-        private OVRManager.ProcessorPerformanceLevel defaultGpuLevel = OVRManager.ProcessorPerformanceLevel.SustainedHigh;
+        //[SerializeField]
+        //[Tooltip("Default GPU performance level (0-2 is documented), (3-5 is undocumented).")]
+        //[Range(0, 5)]
+        //private OVRManager.ProcessorPerformanceLevel defaultGpuLevel = OVRManager.ProcessorPerformanceLevel.SustainedHigh;
 
-        /// <summary>
-        /// Accessor for the Oculus GPU performance level.
-        /// </summary>
-        public OVRManager.ProcessorPerformanceLevel GPULevel
-        {
-            get => defaultGpuLevel;
-            set
-            {
-                defaultGpuLevel = value;
-                ApplyConfiguredPerformanceSettings();
-            }
-        }
+        ///// <summary>
+        ///// Accessor for the Oculus GPU performance level.
+        ///// </summary>
+        //public OVRManager.ProcessorPerformanceLevel GPULevel
+        //{
+        //    get => defaultGpuLevel;
+        //    set
+        //    {
+        //        defaultGpuLevel = value;
+        //        ApplyConfiguredPerformanceSettings();
+        //    }
+        //}
 #endif
 
         [SerializeField]
@@ -171,31 +171,31 @@ namespace Microsoft.MixedReality.Toolkit.XRSDK.Oculus.Input
         }
 
 #if OCULUSINTEGRATION_PRESENT
-        [Header("Super sampling")]
-        [Range(0.7f, 2.0f)]
-        [SerializeField]
-        float resolutionScale = 1.25f;
+        //[Header("Super sampling")]
+        //[Range(0.7f, 2.0f)]
+        //[SerializeField]
+        //float resolutionScale = 1.25f;
 
-        [Header("Fixed Foveated Rendering")]
-        [SerializeField]
-        bool useDynamicFixedFoveatedRendering = true;
+        //[Header("Fixed Foveated Rendering")]
+        //[SerializeField]
+        //bool useDynamicFixedFoveatedRendering = true;
 
-        [SerializeField]
-        OVRManager.FixedFoveatedRenderingLevel fixedFoveatedRenderingLevel = OVRManager.FixedFoveatedRenderingLevel.High;
+        //[SerializeField]
+        //OVRManager.FixedFoveatedRenderingLevel fixedFoveatedRenderingLevel = OVRManager.FixedFoveatedRenderingLevel.High;
 #endif
 
         public void ApplyConfiguredPerformanceSettings()
         {
 #if OCULUSINTEGRATION_PRESENT
-            UnityEngine.XR.XRSettings.eyeTextureResolutionScale = resolutionScale;
-            OVRManager.suggestedCpuPerfLevel = CPULevel;
-            OVRManager.suggestedGpuPerfLevel = GPULevel;
+            //UnityEngine.XR.XRSettings.eyeTextureResolutionScale = resolutionScale;
+            //OVRManager.suggestedCpuPerfLevel = CPULevel;
+            //OVRManager.suggestedGpuPerfLevel = GPULevel;
 
-            if (OVRManager.fixedFoveatedRenderingSupported)
-            {
-                OVRManager.fixedFoveatedRenderingLevel = fixedFoveatedRenderingLevel;
-                OVRManager.useDynamicFixedFoveatedRendering = useDynamicFixedFoveatedRendering;
-            }
+            //if (OVRManager.fixedFoveatedRenderingSupported)
+            //{
+            //    OVRManager.fixedFoveatedRenderingLevel = fixedFoveatedRenderingLevel;
+            //    OVRManager.useDynamicFixedFoveatedRendering = useDynamicFixedFoveatedRendering;
+            //}
 #endif
         }
     }

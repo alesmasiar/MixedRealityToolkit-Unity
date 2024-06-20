@@ -207,7 +207,7 @@ The tool can be found under <i>Mixed Reality > Toolkit > Utilities > Oculus > In
 
         private void SetupInput()
         {
-            cameraRig = FindObjectUtility.FindObjectsByType<OVRCameraRig>();
+            cameraRig = FindObjectUtility.FindObjectByType<OVRCameraRig>();
             if (cameraRig == null)
             {
                 var mainCamera = CameraCache.Main;
